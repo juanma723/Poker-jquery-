@@ -8,23 +8,39 @@
 	float: left;
 	width: 100%;
 	height: 100%;
-	background-color:  #7EC0EE;
+	background-color:  #3a9fe5;
 }
 #banca{
 	float: left;
 	width: 50%;
 	height: 25%;
+	background-color: #1d4f72;
+	border-top-right-radius: 20px;
+	border-top-left-radius: 20px;
+	border: 2px solid yellow;
+	border-bottom: none;
+	
 }
 #rellenar2{
 	float: left;
 	width: 50%;
 	height: 25%;
+	background-color: #1d4f72;
+	border-bottom-right-radius: 20px;
+	border-bottom-left-radius: 20px;
+	border: 2px solid yellow;
+	border-top: none;
+	background-image: url("img/wp.png");
+	background-repeat: no-repeat;
+	background-size: 200px 200px;
+	background-position: center; 
+	
 }
 
 #jugador0{
 	float: left;
 	width: 50%;
-	height: 25%;
+	height: 24%;
 	border-radius: 20px;
 
 }
@@ -32,8 +48,21 @@
 	width: 25%;
 	height: 25%;
 	float: left;
-	
+	background-image: url("img/charcu.png");
+	background-repeat: no-repeat;
+	background-size: 300px;
+	background-position: center; 
 }
+.rellenar3{
+	width: 25%;
+	height: 25%;
+	float: left;
+	background-image: url("img/fruteria.png");
+	background-repeat: no-repeat;
+	background-size: 300px;
+	background-position: center; 
+}
+
 
 #jugador1,#jugador2,#jugador3,#jugador4,#jugador5,#jugador6,#jugador7{
 	float: left;
@@ -42,10 +71,12 @@
 	border-radius: 20px;
 }
 
-img {
-    max-width: 15%;
-    max-height: 15%;
+
+#jugador5,#jugador6{
+	width: 24%;
 }
+
+
 
 
 .barajearArriba {
@@ -116,7 +147,6 @@ img {
 	float: left;
 	width: 30%;
 	height: 30%;
-
 }
 #baraja > img{
 	position: absolute;
@@ -126,22 +156,35 @@ img {
 	-webkit-box-shadow: 5px 5px 5px 0px #19262f;
 	-moz-box-shadow: 5px 5px 5px 0px #19262f;
 	box-shadow: 5px 5px 5px 0px#19262f;
-	
+	max-width: 15%;
+    max-height: 15%;
 }
 #mejorJugada{
 	float: left;
-	width: 25%;
+	width: 24%;
 	font-family: 'Raleway', sans-serif;
 	font-size: 100%;
 	font-weight: 800;
 }
 .nombre,.fichas,.apuesta,.cantidad{
 	float: left;
-	width: 50%;
-	margin-left: 5%;
+	width: 30%;
+	height: 10%;
+	margin-top: 2%;
 	font-family: 'Raleway', sans-serif;
 	font-size: 15px;
+	color:white;
+	border: 1px solid black;
+	background-color: #19262f;
+	opacity: .8;
+	text-align: center;
 }
+.nombre{
+	margin-left: 5%;
+
+}
+
+
 @media screen and (max-width: 400px) {
 	* {
 	font-size: 10px;
