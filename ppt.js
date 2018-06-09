@@ -1,6 +1,8 @@
 $(function () {
 	//*si quieres que se no se muestren los id usar array asociativo,ej. {1:"string", 2:"string2", 3:"string3"};
-	var baraja = ["2-c", "2-p", "2-d", "2-t", "3-c", "3-p", "3-d", "3-t", "4-c", "4-p", "4-d", "4-t", "5-c", "5-p", "5-d", "5-t", "6-c", "6-p", "6-d", "6-t", "7-c", "7-p", "7-d", "7-t", "8-c", "8-p", "8-d", "8-t", "9-c", "9-p", "9-d", "9-t", "10-c", "10-p", "10-d", "10-t", "14-c", "14-p", "14-d", "14-t", "11-c", "11-p", "11-d", "11-t", "13-c", "13-p", "13-d", "13-t", "12-c", "12-p", "12-d", "12-t"];
+	var baraja = ["2-c", "2-p", "2-d", "2-t", "3-c", "3-p", "3-d", "3-t", "4-c", "4-p", "4-d", "4-t", "5-c", "5-p", "5-d", "5-t", "6-c", "6-p",
+	"6-d", "6-t", "7-c", "7-p", "7-d", "7-t", "8-c", "8-p", "8-d", "8-t", "9-c", "9-p", "9-d", "9-t", "10-c", "10-p", "10-d", "10-t", "14-c", "14-p", 
+	"14-d", "14-t", "11-c", "11-p", "11-d", "11-t", "13-c", "13-p", "13-d", "13-t", "12-c", "12-p", "12-d", "12-t"];
 	var c6, actual, sustituir;
 	var manoJugador = [[], [], [], [], [], [], []];
 	var neutral = [];
@@ -10,13 +12,21 @@ $(function () {
 	var ganadorVar = false;
 	var arrayNumerico = [], arrayPalo = [], anterioresJugadas = [], numerosArray = [], palosArray = [], dineroJugadoTotal = [];
 	var high = ["14,14", "13,13", "12,12", "14,13"];//asignar dinero a aumentar segun la carta jugada 
-	high["14,14"] = 100;high["13,13"] = 90;high["12,12"] = 85;high["14,13"] = 75;
+	high["14,14"] = 100; high["13,13"] = 90; high["12,12"] = 85; high["14,13"] = 75;
 	var mid = ["11,11", "10,10", "9,9"];//asignar menos dinero a asignar, menos que la anterior
+	mid["11,11"] = 70; mid["10,10"] = 65; mid["9,9"] = 60;
 	var small = ["8,8", "7,7", "6,6", "5,5", "4,4", "3,3", "2,2"];
+	small["8,8"] = 50; small["7,7"] = 50; small["6,6"] = 50; small["5,5"] = 50; small["4,4"] = 50; small["4,4"] = 50; small["3,3"] = 50; small["2,2"] = 50;
 	var midAce = ["14,12", "14,11", "14,10"];
+	midAce["14,12"] = 45;midAce["14,11"] = 45;midAce["14,10"] = 45;
 	var suitedAce = ["14,9", "14,8", "14,7", "14,6", "14,5", "14,4", "14,3", "14,2"];//mismo palo check
+	suitedAce["14,9"] = 40;suitedAce["14,8"] = 39;suitedAce["14,7"] = 38;suitedAce["14,6"] = 37;suitedAce["14,5"] = 36;suitedAce["14,4"] = 35;suitedAce["14,3"] = 35;
+	suitedAce["14,2"] = 40;
 	var facecards = ["13,12", "13,11", "13,10", "12,11", "12,10"];
+	facecards["13,12"] = 35;facecards["13,11"] = 34;facecards["13,10"] = 33;facecards["12,11"] = 32;facecards["12,10"] = 31;
 	var suitedConnec = ["12,9", "11,10", "11,9", "11,8", "10,9", "10,8", "9,8", "8,7", "7,6", "6,5", "5,4"];//mismo palo check
+	suitedConnec["12,9"] = 30;suitedConnec["11,10"] = 29;suitedConnec["11,9"] = 28;suitedConnec["11,8"] = 27;suitedConnec["10,9"] = 26;
+	suitedConnec["10,8"] = 25;suitedConnec["9,8"] = 24;suitedConnec["8,7"] = 23;suitedConnec["7,6"] = 22;suitedConnec["6,5"] = 21;suitedConnec["5,4"] = 20;
 	var pequena = Math.floor(Math.random() * 7);
 	var turno2preFlop = false;
 	var myVar = 0;
@@ -188,7 +198,8 @@ $(function () {
 						fCorazon.push(array[i]);
 				}
 			}
-			if ("14-p,13-p,12-p,11-p,10-p" == fPica.toString() || "14-d,13-d,12-d,11-d,10-d" == fDiamante.toString() || "14-c,13-c,12-c,11-c,10-c" == fCorazon.toString() || "14-t,13-t,12-t,11-t,10-t" == fTrebol.toString()) {
+			if ("14-p,13-p,12-p,11-p,10-p" == fPica.toString() || "14-d,13-d,12-d,11-d,10-d" == fDiamante.toString() ||
+			"14-c,13-c,12-c,11-c,10-c" == fCorazon.toString() || "14-t,13-t,12-t,11-t,10-t" == fTrebol.toString()) {
 				if (jugadores[n].nombre == "Jugador0") {
 					jugadores[n].accion = "raise";
 					resultado = "No te lo crees ni tu";
@@ -277,7 +288,8 @@ $(function () {
 			var arrayNumerico = arraySoloNumeros(array);
 			var arrayConsecutivas = [];
 			for (var i = 3; i < arrayNumerico.length; i++) {
-				if (arrayNumerico[i - 3] == arrayNumerico[i - 2] && arrayNumerico[i - 2] == arrayNumerico[i - 1] && arrayNumerico[i - 1] == arrayNumerico[i]) {
+				if (arrayNumerico[i - 3] == arrayNumerico[i - 2] && arrayNumerico[i - 2] == arrayNumerico[i - 1] 
+					&& arrayNumerico[i - 1] == arrayNumerico[i]) {
 					arrayConsecutivas.push(array[i]);
 					arrayConsecutivas.push(array[i - 1]);
 					arrayConsecutivas.push(array[i - 2]);
@@ -596,7 +608,10 @@ $(function () {
 
 		function continuarContinuar() {
 			$("#baraja").children().remove();
-			baraja = ["2-c", "2-p", "2-d", "2-t", "3-c", "3-p", "3-d", "3-t", "4-c", "4-p", "4-d", "4-t", "5-c", "5-p", "5-d", "5-t", "6-c", "6-p", "6-d", "6-t", "7-c", "7-p", "7-d", "7-t", "8-c", "8-p", "8-d", "8-t", "9-c", "9-p", "9-d", "9-t", "10-c", "10-p", "10-d", "10-t", "14-c", "14-p", "14-d", "14-t", "11-c", "11-p", "11-d", "11-t", "13-c", "13-p", "13-d", "13-t", "12-c", "12-p", "12-d", "12-t"];
+			baraja = ["2-c", "2-p", "2-d", "2-t", "3-c", "3-p", "3-d", "3-t", "4-c", "4-p", "4-d", "4-t", "5-c", "5-p", 
+			"5-d", "5-t", "6-c", "6-p", "6-d", "6-t", "7-c", "7-p", "7-d", "7-t", "8-c", "8-p", "8-d", "8-t", "9-c", "9-p", 
+			"9-d", "9-t", "10-c", "10-p", "10-d", "10-t", "14-c", "14-p", "14-d", "14-t", "11-c", "11-p", "11-d", "11-t", "13-c",
+			"13-p", "13-d", "13-t", "12-c", "12-p", "12-d", "12-t"];
 			manoJugador = [[], [], [], [], [], [], []];
 			izqNeutral = 22, izqJugador = 2;
 			resultado = "Nada";
@@ -671,7 +686,6 @@ $(function () {
 		}
 
 		function raise(n) {
-			
 			//tengo que comprobar que la cantidad minima de aumento sea igual o mayor que la diferencia del anterior raise
 			//	aumentoMinimo =  10 - pujaMaxima ;
 			pujaMaxima = pujaMaxima + aumentoMinimo;//cambiar el 10 por lo que quiera el user, si es el ordenador ???
@@ -788,7 +802,7 @@ $(function () {
 
 
 		function comprobarJugadoresActivos() {
-			console.log("flujo" + tardanza);
+			limpiarBucle();
 			tardanza = 500;
 			jugadoresActivos = 0;
 			dineroJugadoTotal = [];
@@ -796,14 +810,13 @@ $(function () {
 			var jugadoresActivos = 0;
 
 			for (i = 0; i < jugadores.length; i++) {
-				if (jugadores[i].accion != "fold") {
+				if (jugadores[i].accion != "fold" && myVar != 0) {
 					tardanza += 500;
 					jugadoresActivos++;
 					setTimeout(analizarMano, tardanza, i);
 				}
 			}
-			//console.log(tardanza);
-			setTimeout(limpiarBucle, tardanza+1000);
+			//setTimeout(limpiarBucle, tardanza+500);
 		}
 
 		function limpiarBucle() {
@@ -865,7 +878,7 @@ $(function () {
 					}
 					else {
 						jugadores[i].accion = "raise";
-						
+
 					}
 
 				}
