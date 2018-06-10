@@ -34,7 +34,7 @@ $(function () {
 	var turno2 = false;
 	var jugadoresActivos = 0;
 	var jugadores = [{
-		nombre: "Jugador0", fichas: 1000, accion: "", turno: 0, enJuego: 0, suMano: "",
+		nombre: "Jugador0", fichas: 1000, accion: "", turno: 0, enJuego: 0, suMano: "", raiseCantidad: 0, probGanar: 0,
 		repartirFuncion: function (i) {
 			manoJugador[0].push(baraja.pop());//saco carta de la baraja y la anado a mi mano
 			$("#" + manoJugador[0][i]).removeClass("add_keyframe")
@@ -48,8 +48,10 @@ $(function () {
 						$(this).css('-webkit-transform', 'rotate(' + now + 'deg)');
 						$(this).css('-moz-transform', 'rotate(' + now + 'deg)');
 						$(this).css('transform', 'rotate(' + now + 'deg)');
+					
 					}, duration: 1000, complete: function (now, fx) {
 						$("#" + manoJugador[0][contador2]).attr("src", "img/" + manoJugador[0][contador2] + ".png");//puedes ver tu mano
+						$( this ).css({ opacity: 0.7 });
 						contador2++;
 					}
 				}, 1000);
@@ -57,32 +59,32 @@ $(function () {
 		}
 	},
 	{
-		nombre: "Jugador1", fichas: 1000, accion: "", turno: 0, enJuego: 0, suMano: "", repartirFuncion: function (i) {
+		nombre: "Jugador1", fichas: 1000, accion: "", turno: 0, enJuego: 0, suMano: "", raiseCantidad: 0, probGanar: 0,  repartirFuncion: function (i) {
 			realizarAnimacionCartas(1, i, 0, '58%');
 		}
 	},
 	{
-		nombre: "Jugador2", fichas: 1000, accion: "", turno: 0, enJuego: 0, suMano: "", repartirFuncion: function (i) {
+		nombre: "Jugador2", fichas: 1000, accion: "", turno: 0, enJuego: 0, suMano: "", raiseCantidad: 0, probGanar: 0, repartirFuncion: function (i) {
 			realizarAnimacionCartas(2, i, 0, '33%');
 		}
 	},
 	{
-		nombre: "Jugador3", fichas: 1000, accion: "", turno: 0, enJuego: 0, suMano: "", repartirFuncion: function (i) {
+		nombre: "Jugador3", fichas: 1000, accion: "", turno: 0, enJuego: 0, suMano: "", raiseCantidad: 0, probGanar: 0, repartirFuncion: function (i) {
 			realizarAnimacionCartas(3, i, 25, '8%');
 		}
 	},
 	{
-		nombre: "Jugador4", fichas: 1000, accion: "", turno: 0, enJuego: 0, suMano: "", repartirFuncion: function (i) {
+		nombre: "Jugador4", fichas: 1000, accion: "", turno: 0, enJuego: 0, suMano: "", raiseCantidad: 0, probGanar: 0, repartirFuncion: function (i) {
 			realizarAnimacionCartas(4, i, 50, '8%');
 		}
 	},
 	{
-		nombre: "Jugador5", fichas: 1000, accion: "", turno: 0, enJuego: 0, suMano: "", repartirFuncion: function (i) {
+		nombre: "Jugador5", fichas: 1000, accion: "", turno: 0, enJuego: 0, suMano: "", raiseCantidad: 0, probGanar: 0, repartirFuncion: function (i) {
 			realizarAnimacionCartas(5, i, 75, '33%');
 		}
 	},
 	{
-		nombre: "Jugador6", fichas: 1000, accion: "", turno: 0, enJuego: 0, suMano: "", repartirFuncion: function (i) {
+		nombre: "Jugador6", fichas: 1000, accion: "", turno: 0, enJuego: 0, suMano: "", raiseCantidad: 0, probGanar: 0, repartirFuncion: function (i) {
 			realizarAnimacionCartas(6, i, 75, '58%');
 		}
 	}];
@@ -100,7 +102,9 @@ $(function () {
 					$(this).css('-webkit-transform', 'rotate(' + now + 'deg)');
 					$(this).css('-moz-transform', 'rotate(' + now + 'deg)');
 					$(this).css('transform', 'rotate(' + now + 'deg)');
-				}, duration: 1000
+				}, duration: 1000, complete: function (now, fx) {
+					$( this ).css({ opacity: 0.7 });
+				}
 			}, 1000);
 		tardanza += 250;
 	}
@@ -137,12 +141,10 @@ $(function () {
 		//////////////////////////////////////////////////////////////////////
 		function comprobarJugada(i) {
 			if (fueraPartida == 6) {
-				setTimeout(ganador, 500, jugadores, i);
+				setTimeout(ganador, 500, i);
 			}
 			else {
 				$("#" + jugadores[i].nombre).css({ 'background-color': '#e5d63a' });
-				//console.log(i + " " + jugadores[i].nombre);
-				//console.log(i + " " + jugadores[i].suMano);
 				if (!comprobarRoyalF(jugadores[i].suMano, i)) {
 					if (!straightFlush(jugadores[i].suMano, i)) {
 						if (!fourOfAKind(jugadores[i].suMano, i)) {
@@ -176,7 +178,6 @@ $(function () {
 					}
 				}
 			}
-			//	console.log(resultado);
 			$("#mejorJugada").html(resultado);
 
 		}
@@ -205,10 +206,12 @@ $(function () {
 				if (jugadores[n].nombre == "Jugador0") {
 					jugadores[n].accion = "raise";
 					resultado = "No te lo crees ni tu";
+					jugadores[n].probGanar=10;
 					ejecutarAccion(n);
 				}
 				else {
 					jugadores[n].accion = "raise";
+					jugadores[n].probGanar=10;
 					ejecutarAccion(n);
 				}
 				return true;
@@ -270,12 +273,14 @@ $(function () {
 						}
 						if (jugadores[n].nombre == "Jugador0") {
 							jugadores[n].accion = "raise";
+							jugadores[n].probGanar=9;
 							resultado = "Tienes un straightFlush";
 							ejecutarAccion(n);
 							pintarCarta(arrayConsecutivas, arrayConsecutivas.length);
 						}
 						else {
 							jugadores[n].accion = "raise";
+							jugadores[n].probGanar=9;
 							ejecutarAccion(n);
 						}
 						return true;
@@ -298,12 +303,14 @@ $(function () {
 					arrayConsecutivas.push(array[i - 3]);
 					if (jugadores[n].nombre == "Jugador0") {
 						jugadores[n].accion = "raise";
+						jugadores[n].probGanar=8;
 						resultado = "Tienes un Four of a kind";
 						pintarCarta(arrayConsecutivas, arrayConsecutivas.length);
 						ejecutarAccion(n);
 					}
 					else {
 						jugadores[n].accion = "raise";
+						jugadores[n].probGanar=8;
 						ejecutarAccion(n);
 					}
 					return true;
@@ -322,12 +329,14 @@ $(function () {
 					if (pareja && trio) {
 						if (jugadores[n].nombre == "Jugador0") {
 							jugadores[n].accion = "raise";
+							jugadores[n].probGanar=7;
 							resultado = "Tienes un full House";
 							pintarCarta(arrayConsecutivas, 5);
 							ejecutarAccion(n);
 						}
 						else {
 							jugadores[n].accion = "raise";
+							jugadores[n].probGanar=7;
 							ejecutarAccion(n);
 						}
 						return true;
@@ -406,12 +415,14 @@ $(function () {
 
 					if (jugadores[n].nombre == "Jugador0") {
 						jugadores[n].accion = "raise";
+						jugadores[n].probGanar=6;
 						resultado = "Tienes un Straight " + arrayConsecutivas;
 						pintarCarta(arrayConsecutivas, arrayConsecutivas.length);
 						ejecutarAccion(n);
 					}
 					else {
 						jugadores[n].accion = "raise";
+						jugadores[n].probGanar=6;
 						ejecutarAccion(n);
 					}
 
@@ -431,12 +442,14 @@ $(function () {
 					arrayConsecutivas.push(array[i]);
 					if (jugadores[n].nombre == "Jugador0") {
 						jugadores[n].accion = "call";
+						jugadores[n].probGanar=5;
 						pintarCarta(arrayConsecutivas, arrayConsecutivas.length);
 						resultado = "Tienes un trio";
 						ejecutarAccion(n);
 					}
 					else {
 						jugadores[n].accion = "call";
+						jugadores[n].probGanar=5;
 						ejecutarAccion(n);
 					}
 					return true;
@@ -460,10 +473,12 @@ $(function () {
 							jugadores[n].accion = "call";
 							pintarCarta(arrayConsecutivas, arrayConsecutivas.length);
 							resultado = "Tienes una doble pareja";
+							jugadores[n].probGanar=4;
 							ejecutarAccion(n);
 						}
 						else {
 							jugadores[n].accion = "call";
+							jugadores[n].probGanar=4;	
 							ejecutarAccion(n);
 						}
 						return true;
@@ -483,11 +498,13 @@ $(function () {
 					if (jugadores[n].nombre == "Jugador0") {
 						jugadores[n].accion = "call";
 						pintarCarta(arrayConsecutivas, arrayConsecutivas.length);
+						jugadores[n].probGanar=3;
 						resultado = "Tienes una pareja";
 						ejecutarAccion(n);
 					}
 					else {
 						jugadores[n].accion = "call";
+						jugadores[n].probGanar=3;
 						ejecutarAccion(n);
 					}
 					return true;
@@ -597,7 +614,8 @@ $(function () {
 
 		function autoContinuar() {
 			for (var i = 0; i < jugadores.length; i++) {
-				for (j = 0; j < 2; j++) {
+				for (j = 0; j < 7; j++) {			
+					$("#" + jugadores[i].suMano[j]).css({ 'opacity': '1' });
 					$("#" + manoJugador[i][j]).animate({
 						left: '47%',
 						top: '26%',
@@ -682,21 +700,29 @@ $(function () {
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		function fold(n) {
-			//	console.log(jugadores[n].nombre); 
+			//	console.log(jugadores[n].nombre);
 			$("#" + jugadores[n].nombre).css({ 'background-color': '#324c5f' });
+		//	$("#" + jugadores[n].nombre).css({ 'opacity': '0.6' });
+		
+			$("#" + jugadores[n].suMano[0]).css({ 'opacity': '0.6' });
+			$("#" + jugadores[n].suMano[1]).css({ 'opacity': '0.6' });
+
 		}
 
 		function raise(n) {
 			//tengo que comprobar que la cantidad minima de aumento sea igual o mayor que la diferencia del anterior raise
 			//	aumentoMinimo =  10 - pujaMaxima ;
-
-			pujaMaxima = pujaMaxima + valor[arrayNumerico];//cambiar el 10 por lo que quiera el user, si es el ordenador ???
+			if(jugadores[n].raiseCantidad > jugadores[n].fichas){
+				pujaMaxima = pujaMaxima + jugadores[n].fichas;
+			}
+			else{
+				pujaMaxima = pujaMaxima + jugadores[n].raiseCantidad ;
+			}
 			var diferencia = pujaMaxima - jugadores[n].enJuego;
 			//	console.log(diferencia);
 			boteTotal += diferencia;
 			jugadores[n].enJuego = jugadores[n].enJuego + diferencia;
 			jugadores[n].fichas = jugadores[n].fichas - diferencia;
-
 			dineroJugadoTotal.push(jugadores[n].enJuego);
 			$("#" + jugadores[n].nombre).css({ 'background-color': '#e53a4a' });
 			$("#" + jugadores[n].nombre).children(".apuesta").html(" Puja(" + jugadores[n].enJuego + ")");
@@ -712,6 +738,7 @@ $(function () {
 			$("#" + jugadores[n].nombre).css({ 'background-color': '#e53a4a' });
 			$("#" + jugadores[n].nombre).children(".apuesta").html(" Puja(" + jugadores[n].enJuego + ")");
 			$("#" + jugadores[n].nombre).children(".fichas").html(" Fichas(" + jugadores[n].fichas + ")");
+			
 		}
 
 
@@ -719,14 +746,14 @@ $(function () {
 		////////////////////////////FIN ACCIONES JUGADOR//////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////
 
-		function ganador(array, posicion) {
+		function ganador(posicion) {
 			ganadorVar = true;
 			jugadores[posicion].fichas += boteTotal;
 			for (i = 0; i < jugadores.length; i++) {
 				jugadores[i].enJuego = 0;
 				$("#" + jugadores[i].nombre).children(".apuesta").html(" Puja(" + jugadores[i].enJuego + ")");
 			}
-			$("#" + array[posicion].nombre).css({ 'background-color': '#3ae580' });
+			$("#" + jugadores[posicion].nombre).css({ 'background-color': '#3ae580' });
 			$("#" + jugadores[posicion].nombre).children(".fichas").html(" Fichas(" + jugadores[posicion].fichas + ")");
 			actualizarInfo();
 
@@ -734,7 +761,6 @@ $(function () {
 		}
 
 		function preFlop() {
-
 			for (i = 0; i < jugadores.length; i++) {
 				tardanza += 1000;
 				setTimeout(analizarMano, tardanza, i);
@@ -758,7 +784,7 @@ $(function () {
 			if (fueraPartida == 6 && !ganadorVar) {
 				for (i = 0; i < jugadores.length; i++) {
 					if (jugadores[i].accion != "fold") {
-						setTimeout(ganador, 500, jugadores, i);
+						setTimeout(ganador, 500, i);
 					}
 				}
 			}
@@ -840,30 +866,21 @@ $(function () {
 
 
 		function comprobarGanador() {
+			let maximo = 0;
+			let posGanador = 0;
 			for (e = 0; e < jugadores.length; e++) {
 				if (jugadores[e].accion != "fold") {
+					if(jugadores[e].probGanar > maximo){
+						maximo =  jugadores[e].probGanar;
+						posGanador = e;
+					}
 					//mostrar cartas		
 					for (var i = 0; i < 7; i++) {
 						$("#" + jugadores[e].suMano[i]).attr("src", "img/" + jugadores[e].suMano[i] + ".png");
 					}
 				}
 			}
-
-			/*
-			jugadores[posicion].fichas += boteTotal;
-			for (i = 0; i < jugadores.length; i++) {
-				jugadores[i].enJuego = 0;
-				$("#" + jugadores[i].nombre).children(".apuesta").html(" Puja(" + jugadores[i].enJuego + ")");
-			}
-			$("#" + array[posicion].nombre).css({ 'background-color': '#3ae580' });
-			$("#" + jugadores[posicion].nombre).children(".fichas").html(" Fichas(" + jugadores[posicion].fichas + ")");
-			actualizarInfo();
-
-			setTimeout(autoContinuar, 1000);
-
-*/
-
-
+			setTimeout(ganador, 1000, posGanador);
 		}
 
 
@@ -903,6 +920,7 @@ $(function () {
 		}
 
 		function analizarMano(i) {
+
 			$("#" + jugadores[i].nombre).css({ 'background-color': '#e5d63a' });
 			//asignar al jugador un array determinado(el suyo)
 			switch (jugadores[i].nombre) {
@@ -927,11 +945,13 @@ $(function () {
 				case "Jugador6":
 					jugadores[i].suMano = manoJugador[6];
 			}
+			$("#" + jugadores[i].suMano[0]).css({ 'opacity': '1' });
+			$("#" + jugadores[i].suMano[1]).css({ 'opacity': '1' });
 			ordenarMayorMenor(jugadores[i].suMano);
 			if (fueraPartida == 6) {
 				clearInterval(myVar);
 				myVar = 0;
-				setTimeout(ganador, 500, jugadores, i);
+				setTimeout(ganador, 500, i);
 			}
 			else {
 				arrayNumerico = arraySoloNumeros(jugadores[i].suMano);
@@ -952,7 +972,7 @@ $(function () {
 					}
 					else {
 						jugadores[i].accion = "raise";
-
+						jugadores[i].raiseCantidad = azarMinMax(20,400);
 					}
 
 				}
@@ -968,6 +988,7 @@ $(function () {
 					}
 					else if (anterioresJugadas.includes("call")) {
 						jugadores[i].accion = "raise";
+						jugadores[i].raiseCantidad = azarMinMax(20,200);
 					}
 					else {
 						if (jugadores[i].turno <= 1) {
@@ -975,6 +996,7 @@ $(function () {
 						}
 						else {
 							jugadores[i].accion = "raise";
+							jugadores[i].raiseCantidad = azarMinMax(20,200);
 						}
 					}
 				}
@@ -999,6 +1021,7 @@ $(function () {
 					else {
 						if (jugadores[i].turno == 4) {
 							jugadores[i].accion = "raise";
+							jugadores[i].raiseCantidad = azarMinMax(20,100);
 						}
 						else {
 							jugadores[i].accion = "call";
@@ -1021,6 +1044,7 @@ $(function () {
 						}
 						else if (jugadores[i].turno == 4) {
 							jugadores[i].accion = "raise";
+							jugadores[i].raiseCantidad = azarMinMax(10,80);
 						}
 						else {
 							jugadores[i].accion = "call";
@@ -1029,6 +1053,7 @@ $(function () {
 					else {
 						if (jugadores[i].turno >= 1) {
 							jugadores[i].accion = "raise";
+							jugadores[i].raiseCantidad = azarMinMax(10,80);
 						}
 						else {
 							jugadores[i].accion = "fold";
@@ -1048,6 +1073,7 @@ $(function () {
 					else if (anterioresJugadas.includes("call")) {
 						if (jugadores[i].turno == 4) {
 							jugadores[i].accion = "raise";
+							jugadores[i].raiseCantidad = azarMinMax(10,70);
 						}
 						else if (jugadores[i].turno <= 1) {
 							jugadores[i].accion = "fold";
@@ -1059,6 +1085,7 @@ $(function () {
 					else {
 						if (jugadores[i].turno >= 2) {
 							jugadores[i].accion = "raise";
+							jugadores[i].raiseCantidad = azarMinMax(10,70);
 						}
 						else {
 							jugadores[i].accion = "fold";
@@ -1086,10 +1113,12 @@ $(function () {
 					else {
 						if (jugadores[i].turno >= 1) {
 							jugadores[i].accion = "raise";
+							jugadores[i].raiseCantidad = azarMinMax(10,50);
 						}
 						else {
 							if (jugadores[i].turno >= 4) {
 								jugadores[i].accion = "raise";
+								jugadores[i].raiseCantidad = azarMinMax(10,50);
 							}
 							else {
 								jugadores[i].accion = "fold";
@@ -1118,6 +1147,7 @@ $(function () {
 					else {
 						if (jugadores[i].turno == 4) {
 							jugadores[i].accion = "raise";
+							jugadores[i].raiseCantidad = azarMinMax(10,30);
 						}
 						else {
 							jugadores[i].accion = "fold";
@@ -1187,6 +1217,10 @@ $(function () {
 			return Math.floor(Math.random() * numero);
 		}
 
+		function azarMinMax(min, max) {
+			return Math.floor(Math.random() * (max - min) ) + min;
+		}
+		
 		otraVez();
 
 		function otraVez() {
