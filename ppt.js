@@ -834,7 +834,7 @@ $(function () {
 			}
 
 			if (checkPujasIguales()) {
-				setTimeout(comprobarGanador, tardanza);
+				setTimeout(comprobarGanador, tardanza+1000);
 			}
 		}
 
@@ -843,11 +843,27 @@ $(function () {
 			for (e = 0; e < jugadores.length; e++) {
 				if (jugadores[e].accion != "fold") {
 					//mostrar cartas		
-					for (var i = 0; i < 2; i++) {
-						$("#" + jugadores[e].suMano[i]).attr("src", "img/3-p.png");
+					for (var i = 0; i < 7; i++) {
+						$("#" + jugadores[e].suMano[i]).attr("src", "img/" + jugadores[e].suMano[i] + ".png");
 					}
 				}
 			}
+
+			/*
+			jugadores[posicion].fichas += boteTotal;
+			for (i = 0; i < jugadores.length; i++) {
+				jugadores[i].enJuego = 0;
+				$("#" + jugadores[i].nombre).children(".apuesta").html(" Puja(" + jugadores[i].enJuego + ")");
+			}
+			$("#" + array[posicion].nombre).css({ 'background-color': '#3ae580' });
+			$("#" + jugadores[posicion].nombre).children(".fichas").html(" Fichas(" + jugadores[posicion].fichas + ")");
+			actualizarInfo();
+
+			setTimeout(autoContinuar, 1000);
+
+*/
+
+
 		}
 
 
