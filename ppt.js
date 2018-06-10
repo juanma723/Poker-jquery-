@@ -31,6 +31,7 @@ $(function () {
 	var pequena = Math.floor(Math.random() * 7);
 	var turno2preFlop = false;
 	var myVar = 0;
+	var pasar = false;
 	var turno2 = false;
 	var jugadoresActivos = 0;
 	var jugadores = [{
@@ -641,6 +642,14 @@ $(function () {
 			clearInterval(myVar);
 			myVar = 0;
 			arrayNumerico = [], arrayPalo = [], anterioresJugadas = [], numerosArray = [], palosArray = [];
+
+			for (j = 0; j < jugadores.length; j++) {
+				if(jugadores[j].fichas == 0){
+					jugadores[j].accion= "fuera";
+				}
+			}
+
+
 			for (i = 0; i < jugadores.length; i++) {
 				//		console.log(jugadores[i].nombre + " " + jugadores[i].turno);
 				$("#" + jugadores[i].nombre).children(".apuesta").html(" ");
@@ -688,6 +697,7 @@ $(function () {
 		});
 
 		$("#call").click(function () {
+			pasar = true;
 			for (var i = 0; i < jugadores.length; i++) {
 				if (jugadores[i].nombre == "Jugador0") {
 					call(i);
@@ -731,6 +741,9 @@ $(function () {
 		//tengo 100 fichas, si quiero igualar a 10 tengo que quiarme 10 de mis fichas totales y anadirme +10 a mi total de fichas apostadas
 		function call(n) {
 			var diferencia = pujaMaxima - jugadores[n].enJuego;
+			if(pujaMaxima){
+
+			}
 			boteTotal += diferencia;
 			jugadores[n].enJuego = jugadores[n].enJuego + diferencia;
 			jugadores[n].fichas = jugadores[n].fichas - diferencia;
@@ -761,13 +774,35 @@ $(function () {
 		}
 
 		function preFlop() {
+			
 			for (i = 0; i < jugadores.length; i++) {
-				tardanza += 1000;
-				setTimeout(analizarMano, tardanza, i);
+					tardanza += 1000;
+					setTimeout(analizarMano, tardanza, i);
 			}
 			setTimeout(ronda2PreFlop, tardanza + 2000);
-			//todas las pujas tienen que ser iguales de los jugadores activos o haya 3 folds
 		}
+
+		function Timer(callback, delay) {
+			var timerId, start, remaining = delay;
+		
+			this.pause = function() {
+				window.clearTimeout(timerId);
+				remaining -= new Date() - start;
+			};
+		
+			this.resume = function() {
+				start = new Date();
+				window.clearTimeout(timerId);
+				timerId = window.setTimeout(callback, remaining);
+			};
+		
+			this.resume();
+		}
+
+
+
+
+
 
 		function checkPujasIguales() {
 			var checkearIguales = true;
@@ -783,7 +818,7 @@ $(function () {
 			turno2 = true;
 			if (fueraPartida == 6 && !ganadorVar) {
 				for (i = 0; i < jugadores.length; i++) {
-					if (jugadores[i].accion != "fold") {
+					if (jugadores[i].accion != "fold" && jugadores[i].accion != "fuera") {
 						setTimeout(ganador, 500, i);
 					}
 				}
@@ -811,7 +846,7 @@ $(function () {
 
 		function flop() {
 			for (i = 0; i < jugadores.length; i++) {
-				if (jugadores[i].accion != "fold") {
+				if (jugadores[i].accion != "fold" && jugadores[i].accion != "fuera") {
 					tardanza += 500;
 					setTimeout(comprobarJugada, tardanza, i);
 					$("#mejorJugada").html(resultado);
@@ -832,7 +867,7 @@ $(function () {
 
 		function turn() {
 			for (i = 0; i < jugadores.length; i++) {
-				if (jugadores[i].accion != "fold") {
+				if (jugadores[i].accion != "fold" && jugadores[i].accion != "fuera") {
 					tardanza += 500;
 					setTimeout(comprobarJugada, tardanza, i);
 					$("#mejorJugada").html(resultado);
@@ -852,7 +887,7 @@ $(function () {
 
 		function river() {
 			for (i = 0; i < jugadores.length; i++) {
-				if (jugadores[i].accion != "fold") {
+				if (jugadores[i].accion != "fold" && jugadores[i].accion != "fuera") {
 					tardanza += 500;
 					setTimeout(comprobarJugada, tardanza, i);
 					$("#mejorJugada").html(resultado);
@@ -886,14 +921,14 @@ $(function () {
 
 		function repeticionPreflop() {
 			for (i = 0; i < jugadores.length; i++) {
-				if (jugadores[i].accion != "fold") {
+				if (jugadores[i].accion != "fold" && jugadores[i].accion != "fuera") {
 					jugadoresActivos++;
 				}
 			}
 			myVar = setInterval(comprobarJugadoresActivos, 1000 * jugadoresActivos);
 		}
 
-
+//////////////////////////////////////////////////
 		function comprobarJugadoresActivos() {
 			limpiarBucle();
 			tardanza = 500;
@@ -903,7 +938,7 @@ $(function () {
 			var jugadoresActivos = 0;
 
 			for (i = 0; i < jugadores.length; i++) {
-				if (jugadores[i].accion != "fold" && myVar != 0) {
+				if (jugadores[i].accion != "fold" && jugadores[i].accion != "fuera" && myVar != 0) {
 					tardanza += 500;
 					jugadoresActivos++;
 					setTimeout(analizarMano, tardanza, i);
@@ -1225,6 +1260,9 @@ $(function () {
 
 		function otraVez() {
 
+			$("#Botones").css({ 'visibility': 'none' });
+
+
 			actualizarInfo();
 			randowArrayOrdenBaraja();
 			crearBaraja();
@@ -1283,12 +1321,20 @@ $(function () {
 			}
 
 			function repartirCartas() {
+
+
+
+
 				jugadores.sort(function (a, b) {//ordenar los turno de los jugadores
 					return a.turno - b.turno
 				})
 				for (var i = 0; i < 2; i++) {//2 veces repe
 					for (j = 0; j < 7; j++) {
-						jugadores[j].repartirFuncion(i);//reparte una carta
+
+
+						if(jugadores[j].accion != "fuera"){
+							jugadores[j].repartirFuncion(i);//reparte una carta
+						}
 					}
 					izqJugador += 10;
 				}
